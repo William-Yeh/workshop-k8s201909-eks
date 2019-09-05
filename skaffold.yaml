@@ -1,0 +1,33 @@
+apiVersion: skaffold/v1beta11
+kind: Config
+build:
+  artifacts:
+    - image: todoapi
+      context: TodoApi
+    - image: todofrontend
+      context: TodoFrontend
+
+deploy:
+  kubectl:
+    manifests:
+      - k8s/local/config.local.yml
+      - k8s/local/todoapi-service.yml
+      - k8s/local/todofrontend-service.yml
+
+
+profiles:
+  - name: cloud
+    #build:
+    #  artifacts:
+    #    # Use "default-repo" to override the "ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com" prefix
+    #    - image: ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/todoapi
+    #      context: TodoApi
+    #    - image: ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/todofrontend
+    #      context: TodoFrontend
+    deploy:
+      kubectl:
+        manifests:
+          # Use "k8s/cloud/fix-name.py" to convert *.yml.tpl --> *.yml
+          #####- k8s/cloud/config.cloud.yml
+          - k8s/cloud/todoapi-service.yml
+          #####- k8s/cloud/todofrontend-service.yml
